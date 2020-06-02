@@ -150,22 +150,30 @@ const getRecentReportsDate = (allReports) => {
     return new Date(max).toISOString();
 }
 
+const createNewFile = (directoryName, urlObject) => {
+    if (urlObject.pathname !== "/") {
+        return directoryName = directoryName + urlObject.pathname.replace(/\//g, "_");
+    } else {
+        return directoryName; 
+    }
+}
+
+const createNewDirectoryIfNeeded = (directoryName) => {
+
+    if (!fs.existsSync(directoryName)) {
+        fs.mkdirSync(directoryName);
+    }    
+}
+
 //ACTUAL FIRE CODE
 if (argv.url) {
 
     //create directory -- turn into function?
     const urlObj = new URL(argv.url);
-
-    //create directory = create file
     let dirName = urlObj.host.replace('www.','');
-    if (urlObj.pathname !== "/") {
-        dirName = dirName + urlObj.pathname.replace(/\//g, "_");
-    }
 
-    //create directory
-    if (!fs.existsSync(dirName)) {
-        fs.mkdirSync(dirName);
-    }
+    createNewFile(dirName, urlObj);
+    createNewDirectoryIfNeeded(dirName);
 
     //fire function
     launchChromeAndRunLighthouse(argv.url).then(results => {
