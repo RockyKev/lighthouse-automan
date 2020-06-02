@@ -124,7 +124,7 @@ if (argv.from && argv.to) {
     return ; 
 }
 
-const getRecentReports = (allReports) => {
+const getRecentReportsDate = (allReports) => {
 
     dates = []; 
 
@@ -171,14 +171,15 @@ if (argv.url) {
     launchChromeAndRunLighthouse(argv.url).then(results => {
         //console.log(results);
 
-        //comparing previous reports block
+        //check for previous reports
         const prevReports = glob(`${dirName}/*.json`, {
             sync: true
         });
 
+        //if previous reports exists
         if (prevReports.length) {
-            const recentReport = getRecentReports(prevReports);
-            recentReportContents = getContents(dirName + '/' + recentReport.replace(/:/g, '_') + '.json');
+            const recentReportDate = getRecentReportsDate(prevReports);
+            recentReportContents = getContents(dirName + '/' + recentReportDate.replace(/:/g, '_') + '.json');
 
             compareReports(recentReportContents, results.js);
         }
