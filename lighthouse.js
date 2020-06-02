@@ -124,6 +124,31 @@ if (argv.from && argv.to) {
     return ; 
 }
 
+const getRecentReports = (allReports) => {
+
+    dates = []; 
+
+    for (report in allReports) {
+        dates.push(
+            new Date(path.parse(allReports[report]).name.replace(/_/g, ":"))
+        );
+    }
+
+    /* DATE COMPARISON
+    const alpha = new Date('2020-01-31');
+    const bravo = new Date('2020-02-15');
+
+    console.log(alpha > bravo); // false
+    console.log(bravo > alpha); // true
+    */
+
+    const max = dates.reduce(function(a, b) {
+        return Math.max(a, b);
+    });
+
+    //converts our date from unix -> iso format.
+    return new Date(max).toISOString();
+}
 
 //ACTUAL FIRE CODE
 if (argv.url) {
@@ -146,52 +171,17 @@ if (argv.url) {
     launchChromeAndRunLighthouse(argv.url).then(results => {
         //console.log(results);
 
-        //comparing previous reports block -- isolate function?
+        //comparing previous reports block
         const prevReports = glob(`${dirName}/*.json`, {
             sync: true
         });
 
         if (prevReports.length) {
-            dates = []; 
-
-            for (report in prevReports) {
-                dates.push(
-                    new Date(path.parse(prevReports[report]).name.replace(/_/g, ":"))
-                );
-            }
-
-            /* DATE COMPARISON
-            const alpha = new Date('2020-01-31');
-            const bravo = new Date('2020-02-15');
-
-            console.log(alpha > bravo); // false
-            console.log(bravo > alpha); // true
-            */
-
-            const max = dates.reduce(function(a, b) {
-                return Math.max(a, b);
-            });
-
-            //converts our date from unix -> iso format.
-            const recentReport = new Date(max).toISOString();
-
-            // const recentReportContents = ( () => {
-            //     const output = fs.readFileSync(
-            //         dirName + "/" + recentReport.replace(/:/g, "_") + ".json", 
-            //         "utf8", 
-            //         (err, results) => {
-            //             return results;
-            //         }
-            //     );
-            //     return JSON.parse(output);
-            // })();
-
-            const recentReportContents = getContents(dirName + '/' + recentReport.replace(/:/g, '_') + '.json');
+            const recentReport = getRecentReports(prevReports);
+            recentReportContents = getContents(dirName + '/' + recentReport.replace(/:/g, '_') + '.json');
 
             compareReports(recentReportContents, results.js);
-
         }
-
 
 
 
