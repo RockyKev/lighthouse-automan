@@ -38,7 +38,20 @@ const getContents = pathString => {
     return JSON.parse(output);
 };
 
+const calcPercentageDiff = (from, to) => {
+
+    //Turn values into percentages
+    // 5.7 - 2.1 = 3.6
+    // 3.6 / 5.7 = 0.63157895
+    // 0.63157895 * 100 = 63.157895
+
+    const per = ( (to - from) / from) * 100;
+    return Math.round(per * 100) / 100;
+}
+
 //compare reports
+
+
 // const compareReports = (from, to) => {
 //     console.log(from["finalUrl"] + " " + from["fetchTime"]);
 //     console.log(to["finalUrl"] + " " + to["fetchTime"]);
@@ -57,16 +70,6 @@ const compareReports = (from, to) => {
         "interactive"       
     ]
 
-    //Turn values into percentages
-    // 5.7 - 2.1 = 3.6
-    // 3.6 / 5.7 = 0.63157895
-    // 0.63157895 * 100 = 63.157895
-
-    const calcPercentageDiff = (from, to) => {
-        const per = ( (to - from) / from) * 100;
-        return Math.round(per * 100) / 100;
-    }
-
     for (let auditObj in from["audits"]) {
         if (metricFilter.includes(auditObj)) {
     
@@ -78,6 +81,7 @@ const compareReports = (from, to) => {
             //console.log(auditObj);
             //Log color needs to change (Green for negative, red for positive, white for unchanged)
     
+            
             logColors = {
                 "red" : "\x1b[31m", 
                 "white": "\x1b[37m", 
