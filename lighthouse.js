@@ -57,6 +57,33 @@ const calcPercentageDiff = (from, to) => {
 //     console.log(to["finalUrl"] + " " + to["fetchTime"]);
 // }
 
+const generateLog = (title, logValue) => {
+
+    //Log color needs to change (Green for negative, red for positive, white for unchanged)
+    const logColors = {
+        "red" : "\x1b[31m", 
+        "white": "\x1b[37m", 
+        "green": "\x1b[32m"
+    };
+
+    let logColor = logColors["white"];
+
+    const log = ( () => {
+        if (Math.sign(logValue) === 1) {
+            logColor = logColors["red"];
+            return `${logValue + "%"} slower`;
+        } else if (Math.sign(logValue) === 0) {
+            return "unchanged";
+        } else {
+            logColor = logColors["green"];
+            return `${logValue + "%"} faster`;
+        }
+    })();
+
+    console.log(logColor, `${title} is ${log}`);
+};
+
+
 const compareReports = (from, to) => {
     const metricFilter = [
         "first-contentful-paint",
@@ -78,32 +105,9 @@ const compareReports = (from, to) => {
                 to["audits"][auditObj].numericValue
             );
     
-            //console.log(auditObj);
-            //Log color needs to change (Green for negative, red for positive, white for unchanged)
-    
-            
-            logColors = {
-                "red" : "\x1b[31m", 
-                "white": "\x1b[37m", 
-                "green": "\x1b[32m"
-            };
-    
-            let logColor = logColors["white"];
-    
-            const log = ( () => {
-                if (Math.sign(percentageDiff) === 1) {
-                    logColor = logColors["red"];
-                    return `${percentageDiff + "%"} slower`;
-                } else if (Math.sign(percentageDiff) === 0) {
-                    return "unchanged";
-                } else {
-                    logColor = logColors["green"];
-                    return `${percentageDiff + "%"} faster`;
-                }
-            })();
-    
-            console.log(logColor, `${from["audits"][auditObj].title} is ${log}`)
-    
+            //console.log(auditObj);    
+            generateLog( from["audits"][auditObj].title, percentageDiff );
+        
         }
     }    
 };
