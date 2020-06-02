@@ -6,7 +6,7 @@ const url = require('url');
 const fs = require('fs');
 const path = require('path'); 
 
-//Launch CHROME
+//Launchs
 const launchChromeAndRunLighthouse = url => {
   return chromeLauncher.launch().then(chrome => {
     const opts = {
@@ -50,13 +50,6 @@ const calcPercentageDiff = (from, to) => {
 }
 
 //compare reports
-
-
-// const compareReports = (from, to) => {
-//     console.log(from["finalUrl"] + " " + from["fetchTime"]);
-//     console.log(to["finalUrl"] + " " + to["fetchTime"]);
-// }
-
 const generateLog = (title, logValue) => {
 
     //Log color needs to change (Green for negative, red for positive, white for unchanged)
@@ -112,18 +105,6 @@ const compareReports = (from, to) => {
     }    
 };
 
-
-//Comparison code - if there are from/to params, fire this and only this
-if (argv.from && argv.to) {
-    compareReports(
-        getContents(argv.from + ".json"), 
-        getContents(argv.to + ".json")
-    );
-
-    //exit early
-    return ; 
-}
-
 const getRecentReportsDate = (allReports) => {
 
     dates = []; 
@@ -165,48 +146,57 @@ const createNewDirectoryIfNeeded = (directoryName) => {
     }    
 }
 
-//ACTUAL FIRE CODE
-if (argv.url) {
+const start = () => {
+//Comparison code - if there are from/to params, fire this and only this
+    if (argv.from && argv.to) {
+        compareReports(
+            getContents(argv.from + ".json"), 
+            getContents(argv.to + ".json")
+        );
+    } else if (argv.url) {
 
-    //create directory -- turn into function?
-    const urlObj = new URL(argv.url);
-    let dirName = urlObj.host.replace('www.','');
+        //create directory
+        const urlObj = new URL(argv.url);
+        let dirName = urlObj.host.replace('www.','');
 
-    createNewFile(dirName, urlObj);
-    createNewDirectoryIfNeeded(dirName);
+        createNewFile(dirName, urlObj);
+        createNewDirectoryIfNeeded(dirName);
 
-    //fire function
-    launchChromeAndRunLighthouse(argv.url).then(results => {
-        //console.log(results);
+        //fire function
+        launchChromeAndRunLighthouse(argv.url).then(results => {
 
-        //check for previous reports
-        const prevReports = glob(`${dirName}/*.json`, {
-            sync: true
+            //check for previous reports
+            const prevReports = glob(`${dirName}/*.json`, {
+                sync: true
+            });
+
+            //if previous reports exists
+            if (prevReports.length) {
+                const recentReportDate = getRecentReportsDate(prevReports);
+                recentReportContents = getContents(dirName + '/' + recentReportDate.replace(/:/g, '_') + '.json');
+
+                compareReports(recentReportContents, results.js);
+            }
+
+            //create file
+            const filename = results.js["fetchTime"].replace(/:/g, "_");
+
+            fs.writeFile(
+                `${dirName}/${filename}.json`, 
+                results.json, 
+                err => {
+                    if (err) throw err; 
+                }
+            );
         });
 
-        //if previous reports exists
-        if (prevReports.length) {
-            const recentReportDate = getRecentReportsDate(prevReports);
-            recentReportContents = getContents(dirName + '/' + recentReportDate.replace(/:/g, '_') + '.json');
-
-            compareReports(recentReportContents, results.js);
-        }
-
-
-
-        //create file -- isolate function? 
-        const filename = results.js["fetchTime"].replace(/:/g, "_");
-
-        fs.writeFile(
-            `${dirName}/${filename}.json`, 
-            results.json, 
-            err => {
-                if (err) throw err; 
-            }
-        );
-    });
-
-} else {
-    throw "You haven't passed a URL to Lighthouse";
+    } else {
+        throw "ERROR: Use --url to pull new reports OR --from --to for comparison";
+    }
 }
+
+//initialize function
+start();
+
+
 
