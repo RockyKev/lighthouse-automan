@@ -113,7 +113,7 @@ const compareReports = (from, to) => {
 };
 
 
-//Comparison code
+//Comparison code - if there are from/to params, fire this and only this
 if (argv.from && argv.to) {
     compareReports(
         getContents(argv.from + ".json"), 
