@@ -1,8 +1,10 @@
 const lighthouse = require("lighthouse");
 const chromeLauncher = require("chrome-launcher");
-const argv = require('yargs').argv; 
+const argv = require('yargs').argv; //for parsing arguments like bash commands 
+const glob = require('glob'); //helps with pattern matching with file searches
 const url = require('url');
 const fs = require('fs');
+const path = require('path'); 
 
 //Launch CHROME
 const launchChromeAndRunLighthouse = url => {
@@ -24,7 +26,26 @@ const launchChromeAndRunLighthouse = url => {
   });
 };
 
-//ACTUAL COMMAND
+
+const getContents = pathString => {
+    const output = fs.readFileSync(
+        pathString, 
+        "utf8", 
+        (err, results) => {
+            return results;
+        }
+    );
+    return JSON.parse(output);
+};
+
+const compareReports = (from, to) => {
+    console.log(from["finalUrl"] + " " + from["fetchTime"]);
+    console.log(to["finalUrl"] + " " + to["fetchTime"]);
+}
+
+
+
+//ACTUAL FIRE CODE
 if (argv.url) {
 
     //create directory -- turn into function?
@@ -44,6 +65,57 @@ if (argv.url) {
     //fire function
     launchChromeAndRunLighthouse(argv.url).then(results => {
         //console.log(results);
+
+        //comparing previous reports block -- isolate function?
+        const prevReports = glob(`${dirName}/*.json`, {
+            sync: true
+        });
+
+        if (prevReports.length) {
+            dates = []; 
+
+            for (report in prevReports) {
+                dates.push(
+                    new Date(path.parse(prevReports[report]).name.replace(/_/g, ":"))
+                );
+            }
+
+            /* DATE COMPARISON
+            const alpha = new Date('2020-01-31');
+            const bravo = new Date('2020-02-15');
+
+            console.log(alpha > bravo); // false
+            console.log(bravo > alpha); // true
+            */
+
+            const max = dates.reduce(function(a, b) {
+                return Math.max(a, b);
+            });
+
+            //converts our date from unix -> iso format.
+            const recentReport = new Date(max).toISOString();
+
+            const recentReportContents = ( () => {
+                const output = fs.readFileSync(
+                    dirName + "/" + recentReport.replace(/:/g, "_") + ".json", 
+                    "utf8", 
+                    (err, results) => {
+                        return results;
+                    }
+                );
+                return JSON.parse(output);
+            })();
+
+            // const recentReportContents = getContents(dirName + '/' + recentReport.replace(/:/g, '_') + '.json');
+
+            compareReports(recentReportContents, results.js);
+
+        }
+
+
+
+
+        //create file -- isolate function? 
         const filename = results.js["fetchTime"].replace(/:/g, "_");
 
         fs.writeFile(
