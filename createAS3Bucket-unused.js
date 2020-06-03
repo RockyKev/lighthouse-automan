@@ -1,13 +1,12 @@
-//load environment file
-require('dotenv').config();
+require('dotenv').config(); //load environment file
 
 const AWS = require('aws-sdk');
 
 //via .env file
 const ID = process.env.AMAZON_ACCESS_ID;
 const SECRET = process.env.AMAZON_ACCESS_SECRET;
-const BUCKET_NAME = process.env.AMAZON_S3_BUCKET;
-const BUCKET_LOCATION = process.env.AMAZON_S3_LOCATION;
+const BUCKET_NAME = ''; //name of the bucket
+const BUCKET_LOCATION = ''; //location == us-west-2, us-east-1
 
 //initialize S3
 const s3 = new AWS.S3({
