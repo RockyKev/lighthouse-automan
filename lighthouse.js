@@ -146,6 +146,26 @@ const createNewDirectoryIfNeeded = (directoryName) => {
     }    
 }
 
+const copyJSONtoReportJSON = () => {
+    //open file 
+    //if file doesn't exist, create it. 
+    const pathToFile = '';
+
+
+    //check to see if object exists. 
+        //current & previous
+        //if current exists - rename to previous
+        //start new current 
+
+
+    //define what items you want
+    let data = [
+    ]
+
+    //https://stackoverflow.com/questions/38586908/copy-json-object-with-nodejs-loop-into-json-file
+}
+
+
 const start = () => {
 //Comparison code - if there are from/to params, fire this and only this
     if (argv.from && argv.to) {
@@ -194,6 +214,7 @@ const start = () => {
         throw "ERROR: Use --url to pull new reports OR --from --to for comparison";
     }
 }
+
 
 //initialize function
 start();
