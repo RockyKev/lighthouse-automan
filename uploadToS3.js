@@ -38,4 +38,4 @@ const uploadFile = (fileName) => {
     });
 }
 
-uploadFile('./cat.jpg');
+//const dirParent = path.dirname(fileName).split(path.sep).pop();
