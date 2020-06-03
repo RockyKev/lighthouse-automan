@@ -6,6 +6,8 @@ const url = require('url');
 const fs = require('fs');
 const path = require('path'); 
 
+const uploadToS3 = require('./uploadToS3.js')
+
 //Launchs
 const launchChromeAndRunLighthouse = url => {
   return chromeLauncher.launch().then(chrome => {
@@ -13,8 +15,6 @@ const launchChromeAndRunLighthouse = url => {
       port: chrome.port
     };
     return lighthouse(url, opts).then(results => {
-      //return chrome.kill().then(() => results.report);
-      //return chrome.kill().then(() => results.lhr);
       return chrome.kill().then(() => {
         return {
             js: results.lhr,
@@ -75,7 +75,6 @@ const generateLog = (title, logValue) => {
 
     console.log(logColor, `${title} is ${log}`);
 };
-
 
 const compareReports = (from, to) => {
     const metricFilter = [
@@ -188,6 +187,9 @@ const start = () => {
                     if (err) throw err; 
                 }
             );
+            console.log(`${dirName}/${filename}.json has been created.`)
+            uploadToS3.uploadFile(`${dirName}/${filename}.json`);
+            console.log(`${dirName}/${filename}.json has been UPLOADED and S3'd.`)
         });
 
     } else {

@@ -21,7 +21,8 @@ const uploadFile = (fileName) => {
     //Set up S3 upload params
     const params = {
         Bucket: BUCKET_NAME, 
-        Key: 'cat.jpg', //File name you want to save as in S3
+        //Key: 'cat.jpg', //File name you want to save as in S3
+        Key: fileName,
         Body: fileContent, 
         // StorageClass: '', //either S3 Standard or S3 Glacier
         // ContentType: '', //sets the image MIME type like image/jpeg
@@ -38,4 +39,8 @@ const uploadFile = (fileName) => {
     });
 }
 
-//const dirParent = path.dirname(fileName).split(path.sep).pop();
+module.exports = {
+    uploadFile
+}
+
+//uploadFile("cat.jpg", "catFolder/cat.jpg");
