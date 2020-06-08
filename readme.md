@@ -21,6 +21,7 @@ node lighthouse.js --from reddit.com\2020-06-01T23_22_05.823Z --to reddit.com\20
 Lighthouse Integration - https://css-tricks.com/build-a-node-js-tool-to-record-and-compare-google-lighthouse-reports/
 Uploading to s3 - https://stackabuse.com/uploading-files-to-aws-s3-with-node-js/
 node env files - https://www.twilio.com/blog/working-with-environment-variables-in-node-js-html
+Ideal Nodejs Project Structure: https://softwareontheroad.com/ideal-nodejs-project-structure/
 
 ## Next steps
 aws glue reads and indexes the data
@@ -31,6 +32,5 @@ aws glue reads and indexes the data
 ~script hits each site with lighthouse~
 ~lighthouse creates a ton of json files~
 ~script saves files directly to s3~
-aws glue reads and indexes the data
-save results to postgress or mongodb
-then query redshift from frontend
+~pull data to a test report~
+finally clean up node projects

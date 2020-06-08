@@ -1,0 +1,101 @@
+<!doctype html>
+<html class="no-js" lang="">
+
+<head>
+  <meta charset="utf-8">
+  <title></title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta property="og:title" content="">
+  <meta property="og:type" content="">
+  <meta property="og:url" content="">
+  <meta property="og:image" content="">
+
+  <link rel="manifest" href="site.webmanifest">
+  <link rel="apple-touch-icon" href="icon.png">
+  <!-- Place favicon.ico in the root directory -->
+
+  <link rel="stylesheet" href="css/normalize.css">
+  <link rel="stylesheet" href="css/main.css">
+
+  <!-- tailwind css cdn - replace with compiled version when ready
+    https://tailwindcss.com/docs/installation/
+    -->
+  <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
+
+  <meta name="theme-color" content="#fafafa">
+</head>
+
+<body class="bg-gray-900 font-sans leading-normal tracking-normal mt-12">
+
+    <!-- TODO: 
+    Change it so it autopulls the LATEST file in `data-file`  -->
+    <section 
+        class="mx-auto bg-white w-9/12 my-12 py-12"
+        id="report"
+        data-site="reddit.com"
+        data-file="2020-06-01T23_22_05.823Z.json">
+
+        <h1 class="text-4xl font-black" id="reportName"> WEBSITE NAME </h1>
+        <p class="italic text-sm"> Time pulled: <span  id="reportTime">x, y, z</span></p>
+
+        <div class="flex">
+
+            <div class="w-8/12 border-solid border-2 border-red-400">
+                <h2 class="py-4 text-2xl underline">Checklist </h2>
+                <p class="text-xm italic">Your checklist is blah blah blah</p>
+
+                <div id="reportChecklist">
+                </div>
+
+            </div>
+
+            <div class="w-4/12 border-solid border-2 border-red-400 bg-gray-400">
+                <h2 class="py-4 text-2xl underline"> Web Vitals </h2>
+                <p>Your web vitals are blah blah blah</p>
+                <div class="pt-8" id="lcp">
+                </div>
+                <div class="pt-8" id="fid">
+                </div>
+                <div class="pt-8" id="cls">
+                </div>
+
+                
+            </div>
+    
+
+
+        </div>
+
+
+
+
+
+    </section>
+    
+
+
+
+
+
+
+
+
+    <!-- using requirejs to bring in jsons -->
+  <script data-main="js/pullJSON.js" src="js/utils/require.js"></script>
+  
+  <script src="js/vendor/modernizr-3.11.2.min.js"></script>
+  <script src="js/plugins.js"></script>
+  <script src="js/main.js"></script>
+
+
+  <!-- Google Analytics: change UA-XXXXX-Y to be your site's ID. -->
+  <script>
+    window.ga = function () { ga.q.push(arguments) }; ga.q = []; ga.l = +new Date;
+    ga('create', 'UA-XXXXX-Y', 'auto'); ga('set', 'anonymizeIp', true); ga('set', 'transport', 'beacon'); ga('send', 'pageview')
+  </script>
+  <script src="https://www.google-analytics.com/analytics.js" async></script>
+</body>
+
+</html>
